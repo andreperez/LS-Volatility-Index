@@ -1,0 +1,12 @@
+////////////////////////////////////////////////////////////
+//  Copyright by HPotter v1.0 29/05/2014
+// The Volatility function measures the market volatility by plotting a 
+// smoothed average of the True Range. It returns an average of the TrueRange 
+// over a specific number of bars, giving higher weight to the TrueRange of 
+// the most recent bar.
+////////////////////////////////////////////////////////////
+study(title="Volatility", shorttitle="Volatility")
+Length = input(10, minval=1)
+xATR = atr(Length)
+nRes = ((Length - 1) * nz(nRes[1], 0) + xATR) / Length
+plot(nRes, color=blue, title="Volatility")
