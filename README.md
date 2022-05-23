@@ -114,4 +114,11 @@ You should never rely on a single indicator and always use a range of them when 
 - Alexandre Wolwacz (Stormer), Fabrício Lorenz, Fábio Figueiredo (Vlad)
 - Feature scaler (for normalization)
 - HPotter (for calc of Historical Volatility )
+
 ****
+
+## █  DONATIONS
+
+- BTC: 3AK6MxX93czQraP4AFv1wKYDvPnPipgF51
+- LTC: MBabKb6vedx3UsxTwMJCPPjKdLJSr6dczS
+- Dash: XcmdgWfnNQeJEJhkd6pUaaQpmT3AiA98QA
