@@ -117,8 +117,6 @@ You should never rely on a single indicator and always use a range of them when 
 - Feature scaler (for normalization)
 - HPotter (for calc of Historical Volatility )
 
-****
-
 ## █  DONATIONS
 
 - BTC: 3AK6MxX93czQraP4AFv1wKYDvPnPipgF51
