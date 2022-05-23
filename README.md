@@ -3,6 +3,8 @@ The LS Volatility Index is a technical trading analysis indicator, which can be 
 
 Basically it serves to measure the volatility of the price in relation to a pre-defined moving average.
 
+![alt](images/06.png)
+
 ## █  Goals
 
 It serves four purposes:
