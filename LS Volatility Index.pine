@@ -127,15 +127,16 @@ fCalcMa(series float src, simple string type, simple int len) =>
 fNormalize(series float src, simple int len, simple float _lowerEnd, simple float _upperEnd) =>
     min = ta.lowest(source=src, length=len)
     max = ta.highest(source=src, length=len)
-    valueNormal = _lowerEnd + (src - min) * (_upperEnd - _lowerEnd) / (max - min)
+    valueNormal = _lowerEnd + ( (src - min) * (_upperEnd - _lowerEnd)/(max - min) )
 // ------------------------- }
 
 
 // ------------------------- LS Volatility Index {
 ma = fCalcMa(srcMaPrice, typeMaPrice, lenMaPrice)
 distance = math.abs ( (high >= ma ? high : low) - ma) / ma
+distance := distance * 100
 historicalVolatility = fHistoricalVolatility()
-lsVolatility = distance/historicalVolatility
+lsVolatility = (distance/historicalVolatility) * 100
 
 // Normalization
 lsNormalized = fNormalize(src=lsVolatility, len=lenNormal, _lowerEnd=lowerEnd, _upperEnd=upperEnd)
@@ -152,7 +153,7 @@ if showMaLS
 
 // ------------------------- ATR Volatility Index {
 float candleAmplitude =  ta.atr(1)      // na(high[1])? high-low : math.max(math.max(high - low, math.abs(high - close[1])), math.abs(low - close[1]))
-atrVolatilityIndex = candleAmplitude/historicalVolatility
+atrVolatilityIndex = (candleAmplitude/historicalVolatility) * 100
 
 // Normalization
 atrVolatilityIndexNormal = fNormalize(src=atrVolatilityIndex, len=lenNormal, _lowerEnd=0.0, _upperEnd=30.0)
