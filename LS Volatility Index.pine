@@ -10,11 +10,11 @@
 indicator("LS Volatility Index", shorttitle='LS Volatility Index', format=format.price, precision=2, timeframe="")
 
 // ------------------------- Constants {
-var float lowerEnd      = 0
-var float upperEnd      = 100
 var string GROUP_MA     = 'Moving Average of Price'
 var string GROUP_LS     = 'LS Volatility Index'
-var string GROUP_ATR    = 'ATR Volatility Index'
+var string GROUP_LS_AL  = 'Alerts for LS'
+var string GROUP_ATR    = 'ATR - Average True Range'
+var string GROUP_ATR_AL = 'Alerts for ATR'
 var string TOOLTIP_1    = 'Moving Average of price.\n' +
   'The distance of the price to this moving average will be calculate through the LS indicator.\n' + 
   'The period has no effect on the VWAP.'
@@ -23,8 +23,9 @@ var string TOOLTIP_2    = 'Period used in normalization calculation.\n' +
   'High values decrease noise, but as a side effect they can make it difficult to visualize current movements.\n' +
   'Low values increase noise, and as a side effect it generates a lot of pollution and false flags.'
 var string TOOLTIP_3    = 'Indicator color when at the bottom or top.'
-var string TOOLTIP_4    = 'This will show the current ATR (Average True Range) volatility in relation to historical volatility, in the range normalized of 0 and 30.'
-var string TOOLTIP_5    = 'Consider the limits defined above'
+var string TOOLTIP_4    = 'This will show the ATR (Average True Range)'
+var string TOOLTIP_6    = 'Values used in normalization range'
+var string TOOLTIP_7    = 'Calculates the index dividing by historical volatility, that is, obtaining the ratio between candle variation and historical volatility.'
 var string SMA          = 'Simple Moving Average'
 var string EMA          = 'Exponential Moving Average'
 var string HMA          = 'Hull Moving Average'
@@ -35,6 +36,10 @@ var color TRANSPARENT   = color.new(color.white, 100)
 // ------------------------- }
 
 // ------------------------- Inputs {
+
+//---------------------
+// LS Index
+//---------------------
 // Moving Average of Price
 float srcMaPrice            = input.source(defval=close, title='Source', inline='1', group=GROUP_MA, tooltip=TOOLTIP_1)
 var string typeMaPrice      = input.string(defval=EMA, title='Type',
@@ -43,10 +48,12 @@ var string typeMaPrice      = input.string(defval=EMA, title='Type',
 var int lenMaPrice          = input.int(defval=55, title='Length', inline='1', minval=1, group=GROUP_MA)
 
 // LS Volatility Index
-var int lenHistVol          = input.int(defval=55, title='Length for Historical Volatility', inline='4', minval=1, group=GROUP_LS)
-var int lenNormal           = input.int(defval=55, title='Normalization Length', inline='5', minval=1, tooltip=TOOLTIP_2, group=GROUP_LS)
-var color colorNearMa       = input.color(defval=color.new(#3af13c, 0), title='Color of indicator when 0', inline='6', tooltip=TOOLTIP_3, group=GROUP_LS)
-var color colorFarMa        = input.color(defval=color.new(#ff0000, 0), title='Color of indicator when 100', inline='6', tooltip=TOOLTIP_3, group=GROUP_LS)
+var int lenHistVol          = input.int(defval=89, title='Length for Historical Volatility', inline='4', minval=1, group=GROUP_LS)
+var int lenNormal           = input.int(defval=89, title='Normalization Length', inline='5', minval=1, tooltip=TOOLTIP_2, group=GROUP_LS)
+var color colorBottom       = input.color(defval=color.new(#3af13c, 0), title='Bottom', inline='6', tooltip=TOOLTIP_3, group=GROUP_LS)
+var int lowerEndLs            = input.int(defval=0, title='', inline='6', group=GROUP_LS, tooltip=TOOLTIP_6)
+var color colorTop          = input.color(defval=color.new(#ff0000, 0), title='Top', inline='6', tooltip=TOOLTIP_3, group=GROUP_LS)
+var int upperEndLs            = input.int(defval=100, title='', inline='6', group=GROUP_LS, tooltip=TOOLTIP_6)
 
 // Smooth LS
 var bool boolSmoothLS       = input.bool(defval=false, title='Smooth indicator?', inline='10', group=GROUP_LS)
@@ -60,47 +67,72 @@ var string typeMaLS         = input.string(defval=EMA, title='Type',
   options=[SMA, EMA, HMA, ALMA, MEDIAN], inline='20', group=GROUP_LS)
 var int lenMaLS             = input.int(defval=5, title='Length', inline='20', minval=1, group=GROUP_LS)
 
-// Colors of LS
 var color colorMaLS         = input.color(defval=color.white, title='Color of MA', inline='21', group=GROUP_LS)
 var bool alterColorMaLs     = input.bool(defval=false, title='Change color of MA when above or bellow indicator?', inline='21', group=GROUP_LS)
 var color colorAboveMaLS    = input.color(defval=color.new(#ff0000, 0), title='MA bellow indicator', inline='22', group=GROUP_LS)
 var color colorBellowMaLS   = input.color(defval=color.new(#3af13c, 0), title='MA above indicator', inline='22', group=GROUP_LS)
 var bool ribbonMaLs         = input.bool(defval=false, title='Apply ribbon filling between indicator and MA?', inline='23', group=GROUP_LS)
 
-var bool showMarkers        = input.bool(defval=true, title='Show markers when indicator reaches limit?', inline='30', group=GROUP_LS)
-var color colorMarkerBottom = input.color(defval=color.new(#3af13c, 0), title='Bottom', inline='31', group=GROUP_LS)
-var int bottomMarkerLS      = input.int(defval=0, title='', inline='31', minval=0, maxval=30, group=GROUP_LS)
-var color colorMarkerTop    = input.color(defval=color.new(#ff0000, 0), title='Top', inline='31', group=GROUP_LS)
-var int topMarkerLS         = input.int(defval=100, title='', inline='31', minval=70, maxval=100, group=GROUP_LS)
+//--> Alerts
+// Markers
+var bool showMarkers        = input.bool(defval=true, title='Show markers when indicator reaches limit?', inline='30', group=GROUP_LS_AL)
+var color colorMarkerBottom = input.color(defval=color.new(#3af13c, 0), title='Bottom', inline='31', group=GROUP_LS_AL)
+var int bottomMarkerLS      = input.int(defval=0, title='', inline='31', group=GROUP_LS_AL)
+var color colorMarkerTop    = input.color(defval=color.new(#ff0000, 0), title='Top', inline='31', group=GROUP_LS_AL)
+var int topMarkerLS         = input.int(defval=100, title='', inline='31', group=GROUP_LS_AL)
 
-var bool showFill           = input.bool(defval=false, title='Fill background when indicator reaches limit?', inline='40', group=GROUP_LS, tooltip=TOOLTIP_5)
-var color colorNearBg       = input.color(defval=color.new(#3af13c, 75), title='Bottom', inline='41', group=GROUP_LS)
-var color colorFarBg        = input.color(defval=color.new(#ff0000, 75), title='Top', inline='41', group=GROUP_LS)
+// Fill Background
+var bool showFill           = input.bool(defval=true, title='Fill background when indicator reaches limit?', inline='40', group=GROUP_LS_AL)
+var color colorNearBg       = input.color(defval=color.new(#3af13c, 75), title='Bottom', inline='41', group=GROUP_LS_AL)
+var int bottomFillLS        = input.int(defval=0, title='', inline='41', group=GROUP_LS_AL)
+var color colorFarBg        = input.color(defval=color.new(#ff0000, 75), title='Top', inline='41', group=GROUP_LS_AL)
+var int topFillLS           = input.int(defval=100, title='', inline='41', group=GROUP_LS_AL)
 
-var bool showBarColor       = input.bool(defval=false, title='Change bar color when indicator reaches limit?', inline='50', group=GROUP_LS)
-var color colorNearBar      = input.color(defval=color.new(#1101ff, 0), title='Bottom', inline='51', group=GROUP_LS)
-var color colorFarBar       = input.color(defval=color.yellow, title='Top', inline='51', group=GROUP_LS)
+// Bar Color
+var bool showBarColor       = input.bool(defval=true, title='Change bar color when indicator reaches limit?', inline='50', group=GROUP_LS_AL)
+var color colorNearBar      = input.color(defval=color.new(#1101ff, 0), title='Bottom', inline='51', group=GROUP_LS_AL)
+var int bottomBarLS         = input.int(defval=0, title='', inline='51', group=GROUP_LS_AL)
+var color colorFarBar       = input.color(defval=color.new(#1101ff, 0), title='Top', inline='51', group=GROUP_LS_AL)
+var int topBarLS            = input.int(defval=100, title='', inline='51', group=GROUP_LS_AL)
 
+//---------------------
 // ATR
-var bool showATRvol         = input.bool(defval=true, title='Show ATR Volatility?', inline='60', group=GROUP_ATR, tooltip=TOOLTIP_4)
-var color colorATRbottom    = input.color(defval=color.new(#0EEAFF, 80), title='Color of ATR when 0', inline='61', tooltip=TOOLTIP_3, group=GROUP_ATR)
-var color colorATRtop       = input.color(defval=color.new(#1101ff, 20), title='Color of ATR when 30', inline='61', tooltip=TOOLTIP_3, group=GROUP_ATR)
+//---------------------
+var bool showATRvol         = input.bool(defval=true, title='Show ATR?', inline='60', group=GROUP_ATR, tooltip=TOOLTIP_4)
+var int lenATR              = input.int(defval=5, minval=1, title='Length', inline='60', group=GROUP_ATR, tooltip=TOOLTIP_4)
+var bool calcHistVol        = input.bool(defval=true, title='Consider Historical Volatility?', inline='61', group=GROUP_ATR, tooltip=TOOLTIP_7)
+var color colorATRbottom    = input.color(defval=color.new(#0EEAFF, 50), title='Bottom', inline='62', tooltip=TOOLTIP_3, group=GROUP_ATR)
+var int bottomATR           = input.int(defval=0, title='', inline='62', group=GROUP_ATR)
+var color colorATRtop       = input.color(defval=color.new(#1101ff, 0), title='Top', inline='62', tooltip=TOOLTIP_3, group=GROUP_ATR)
+var int topATR              = input.int(defval=100, title='', inline='62', group=GROUP_ATR)
 
+// Smooth
 var bool boolSmoothATR      = input.bool(defval=false, title='Smooth ATR?', inline='65', group=GROUP_ATR)
 var string typeMaSmoothATR  = input.string(defval=EMA, title='Type', 
   options=[SMA, EMA, HMA, ALMA], inline='65', group=GROUP_ATR)
 var int lenSmoothATR        = input.int(defval=5, title='Length', inline='65', minval=1, group=GROUP_ATR)
-var bool showMarkersATR     = input.bool(defval=true, title='Show markers when indicator reaches limit?', inline='66', group=GROUP_ATR)
-var color colorMarkerATRbot = input.color(defval=color.new(#3af13c, 0), title='Bottom', inline='67', group=GROUP_ATR)
-var int bottomMarkerATR     = input.int(defval=0, title='', inline='67', minval=0, maxval=10, group=GROUP_ATR)
-var color colorMarkerATRtop = input.color(defval=color.new(#ff0000, 0), title='Top', inline='67', group=GROUP_ATR)
-var int topMarkerATR        = input.int(defval=30, title='', inline='67', minval=15, maxval=30, group=GROUP_ATR)
-var bool showBarColorATR    = input.bool(defval=false, title='Change bar color when indicator reaches limit?', inline='68', group=GROUP_ATR)
-var color colorNearBarATR   = input.color(defval=color.yellow, title='Bottom', inline='69', group=GROUP_ATR)
-var color colorFarBarATR    = input.color(defval=color.yellow, title='Top', inline='69', group=GROUP_ATR)
-var bool showFillATR        = input.bool(defval=false, title='Fill background when indicator reaches limit?', inline='70', group=GROUP_ATR, tooltip=TOOLTIP_5)
-var color colorNearBgATR    = input.color(defval=color.new(#3af13c, 75), title='Bottom', inline='71', group=GROUP_ATR)
-var color colorFarBgATR     = input.color(defval=color.new(#ff0000, 75), title='Top', inline='71', group=GROUP_ATR)
+
+// --> Alerts
+// Markers
+var bool showMarkersATR     = input.bool(defval=true, title='Show markers when indicator reaches limit?', inline='66', group=GROUP_ATR_AL)
+var color colorMarkerATRbot = input.color(defval=color.new(#3af13c, 0), title='Bottom', inline='67', group=GROUP_ATR_AL)
+var int bottomMarkerATR     = input.int(defval=0, title='', inline='67', group=GROUP_ATR_AL)
+var color colorMarkerATRtop = input.color(defval=color.new(#ff0000, 0), title='Top', inline='67', group=GROUP_ATR_AL)
+var int topMarkerATR        = input.int(defval=100, title='', inline='67', group=GROUP_ATR_AL)
+
+// Fill Background
+var bool showFillATR        = input.bool(defval=true, title='Fill background when indicator reaches limit?', inline='70', group=GROUP_ATR_AL)
+var color colorNearBgATR    = input.color(defval=color.new(#3af13c, 75), title='Bottom', inline='71', group=GROUP_ATR_AL)
+var int bottomFillATR       = input.int(defval=0, title='', inline='71', group=GROUP_ATR_AL)
+var color colorFarBgATR     = input.color(defval=color.new(#ff0000, 75), title='Top', inline='71', group=GROUP_ATR_AL)
+var int topFillATR          = input.int(defval=100, title='', inline='71', group=GROUP_ATR_AL)
+
+// Bar Color
+var bool showBarColorATR    = input.bool(defval=true, title='Change bar color when indicator reaches limit?', inline='80', group=GROUP_ATR_AL)
+var color colorNearBarATR   = input.color(defval=color.new(#1101ff, 0), title='Bottom', inline='81', group=GROUP_ATR_AL)
+var int bottomBarATR        = input.int(defval=0, title='', inline='81', group=GROUP_ATR_AL)
+var color colorFarBarATR    = input.color(defval=color.new(#1101ff, 0), title='Top', inline='81', group=GROUP_ATR_AL)
+var int topBarATR           = input.int(defval=100, title='', inline='81', group=GROUP_ATR_AL)
 
 // ------------------------- }
 
@@ -139,7 +171,7 @@ historicalVolatility = fHistoricalVolatility()
 lsVolatility = (distance/historicalVolatility) * 100
 
 // Normalization
-lsNormalized = fNormalize(src=lsVolatility, len=lenNormal, _lowerEnd=lowerEnd, _upperEnd=upperEnd)
+lsNormalized = fNormalize(src=lsVolatility, len=lenNormal, _lowerEnd=lowerEndLs, _upperEnd=upperEndLs)
 
 // Smooth
 if boolSmoothLS
@@ -151,12 +183,15 @@ if showMaLS
     maLS := fCalcMa(lsNormalized, typeMaLS, lenMaLS)
 // ------------------------- }
 
-// ------------------------- ATR Volatility Index {
-float candleAmplitude =  ta.atr(1)      // na(high[1])? high-low : math.max(math.max(high - low, math.abs(high - close[1])), math.abs(low - close[1]))
-atrVolatilityIndex = (candleAmplitude/historicalVolatility) * 100
+// ------------------------- ATR {
+float candleAmplitude =  ta.atr(lenATR)      // na(high[1])? high-low : math.max(math.max(high - low, math.abs(high - close[1])), math.abs(low - close[1]))
+atrVolatilityIndex = if calcHistVol
+    (candleAmplitude/historicalVolatility) * 100
+else
+    candleAmplitude
 
 // Normalization
-atrVolatilityIndexNormal = fNormalize(src=atrVolatilityIndex, len=lenNormal, _lowerEnd=0.0, _upperEnd=30.0)
+atrVolatilityIndexNormal = fNormalize(src=atrVolatilityIndex, len=lenNormal, _lowerEnd=bottomATR, _upperEnd=topATR)
 
 // Smooth
 if boolSmoothATR
@@ -164,7 +199,7 @@ if boolSmoothATR
 // ------------------------- }
 
 // ------------------------- Plots - LS Volatility Index {
-colorLS  = color.from_gradient(lsNormalized, 0, 100, colorNearMa, colorFarMa)
+colorLS  = color.from_gradient(lsNormalized > lsNormalized[1] ? lsNormalized : lsNormalized[1], lowerEndLs, upperEndLs, colorBottom, colorTop)
 
 colorMaLS := if alterColorMaLs
     if lsNormalized > maLS
@@ -174,7 +209,7 @@ colorMaLS := if alterColorMaLs
 else
     colorMaLS
     
-lsPlot = plot(lsNormalized, color=colorLS, linewidth=1, title='LS Volatility Index')
+lsPlot = plot(lsNormalized, color=colorLS, linewidth=2, title='LS Volatility Index')
 maLsPlot = plot(maLS, color=colorMaLS, linewidth=2, title='Moving Average of LS Volatility Index')
 
 // Lines
@@ -184,24 +219,59 @@ hLine100 = hline(100, color=TRANSPARENT, linestyle=hline.style_dotted, title='To
 
 plotchar(showMarkers and lsNormalized<=bottomMarkerLS ? lsNormalized : na, title='Marker when indicator reachs bottom', color=colorMarkerBottom, location=location.absolute, char='●', size=size.tiny)
 plotchar(showMarkers and lsNormalized>=topMarkerLS ? lsNormalized : na, title='Marker when indicator reachs top', color=colorMarkerTop, location=location.absolute, char='●', size=size.tiny)
-fill(hLine000, hLine100, color=showFill and lsNormalized <= bottomMarkerLS ? colorNearBg : na, title='Fill background when indicator reachs bottom')
-fill(hLine000, hLine100, color=showFill and lsNormalized >= topMarkerLS ? colorFarBg : na, title='Fill background when indicator reachs top')
-barcolor(barstate.isconfirmed and showBarColor and lsNormalized <= bottomMarkerLS ? colorNearBar : na, title='Bar color when indicator reachs bottom')
-barcolor(barstate.isconfirmed and showBarColor and lsNormalized >= topMarkerLS ? colorFarBar : na, title='Bar color when indicator reachs top')
+
+
+colorFillLsBottom = if showFill
+    if lsNormalized <= bottomFillLS or lsNormalized[1] <= bottomFillLS
+        colorNearBg
+    else
+        na
+else
+    na
+    
+colorFillLsTop = if showFill
+    if lsNormalized >= topFillLS or lsNormalized[1] >= topFillLS
+        colorFarBg
+    else
+        na
+else
+    na
+    
+fill(hLine000, hLine100, color=colorFillLsBottom, title='Fill background when indicator reachs bottom')
+fill(hLine000, hLine100, color=colorFillLsTop, title='Fill background when indicator reachs top')
+
+barcolor(barstate.isconfirmed and showBarColor and lsNormalized <= bottomBarLS ? colorNearBar : na, title='Bar color when indicator reachs bottom')
+barcolor(barstate.isconfirmed and showBarColor and lsNormalized >= topBarLS ? colorFarBar : na, title='Bar color when indicator reachs top')
 
 fill(lsPlot, maLsPlot, color=showMaLS and ribbonMaLs ? colorLS : na, title='Ribbon filling between indicator and MA')
 // ------------------------- }
 
-// ------------------------- Plots - ATR Volatility Index {
-colorAtr  = showATRvol ? color.from_gradient(atrVolatilityIndexNormal, 0, 30, colorATRbottom, colorATRtop) : na
-plot(atrVolatilityIndexNormal, color=colorAtr, linewidth=1, title='ATR Volatility Index', style=plot.style_area)
+// ------------------------- Plots - ATR {
+colorAtr  = showATRvol ? color.from_gradient(atrVolatilityIndexNormal > atrVolatilityIndexNormal[1] ? atrVolatilityIndexNormal : atrVolatilityIndexNormal[1], bottomATR, topATR, colorATRbottom, colorATRtop) : na
+plot(atrVolatilityIndexNormal, color=colorAtr, linewidth=1, title='ATR', style=plot.style_histogram)
 
-barcolor(showATRvol and barstate.isconfirmed and showBarColorATR and atrVolatilityIndexNormal <= bottomMarkerATR ? colorNearBarATR : na, title='Bar color when ATR reachs bottom')
-barcolor(showATRvol and barstate.isconfirmed and showBarColorATR and atrVolatilityIndexNormal >= topMarkerATR ? colorFarBarATR : na, title='Bar color when ATR reachs top')
+barcolor(showATRvol and barstate.isconfirmed and showBarColorATR and atrVolatilityIndexNormal <= bottomBarATR ? colorNearBarATR : na, title='Bar color when ATR reachs bottom')
+barcolor(showATRvol and barstate.isconfirmed and showBarColorATR and atrVolatilityIndexNormal >= topBarATR ? colorFarBarATR : na, title='Bar color when ATR reachs top')
 
 plotchar(showATRvol and showMarkersATR and atrVolatilityIndexNormal <= bottomMarkerATR ? atrVolatilityIndexNormal : na, title='Marker when ATR reachs bottom', color=colorMarkerATRbot, location=location.absolute, char='▪', size=size.tiny)
 plotchar(showATRvol and showMarkersATR and atrVolatilityIndexNormal >= topMarkerATR ? atrVolatilityIndexNormal : na, title='Marker when ATR reachs top', color=colorMarkerATRtop, location=location.absolute, char='▪', size=size.tiny)
 
-fill(hLine000, hLine100, color=showFillATR and atrVolatilityIndexNormal <= bottomMarkerATR ? colorNearBgATR : na, title='Fill background when ATR reachs bottom')
-fill(hLine000, hLine100, color=showFillATR and atrVolatilityIndexNormal >= topMarkerATR ? colorFarBgATR : na, title='Fill background when ATR reachs top')
+colorFillAtrBottom = if showFillATR 
+    if atrVolatilityIndexNormal <= bottomFillATR or atrVolatilityIndexNormal[1] <= bottomFillATR
+        colorNearBgATR
+    else 
+        na
+else
+    na
+    
+colorFillAtrTop = if showFillATR
+    if atrVolatilityIndexNormal >= topFillATR or atrVolatilityIndexNormal[1] >= topFillATR
+        colorFarBgATR
+    else 
+        na
+else
+    na
+
+fill(hLine000, hLine100, color=colorFillAtrBottom, title='Fill background when ATR reachs bottom')
+fill(hLine000, hLine100, color=colorFillAtrTop, title='Fill background when ATR reachs top')
 // ------------------------- }
