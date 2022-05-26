@@ -6,6 +6,7 @@
 //      - Alexandre Wolwacz (Stormer), Fabrício Lorenz, Fábio Figueiredo (Vlad): for explanation of the original indicator
 //      - Feature scaler (for normalization)
 //      - HPotter (for calc of Historical Volatility)
+//      - © The_Caretaker (for theme of color spectrum)
 
 indicator("LS Volatility Index", shorttitle='LS Volatility Index', format=format.price, precision=2, timeframe="")
 
@@ -22,7 +23,6 @@ var string TOOLTIP_2    = 'Period used in normalization calculation.\n' +
   'Normalization involves transforming the indicator in the range from 0 to 100.\n' + 
   'High values decrease noise, but as a side effect they can make it difficult to visualize current movements.\n' +
   'Low values increase noise, and as a side effect it generates a lot of pollution and false flags.'
-var string TOOLTIP_3    = 'Indicator color when at the bottom or top.'
 var string TOOLTIP_4    = 'This will show the ATR (Average True Range)'
 var string TOOLTIP_6    = 'Values used in normalization range'
 var string TOOLTIP_7    = 'Calculates the index dividing by historical volatility, that is, obtaining the ratio between candle variation and historical volatility.'
@@ -98,10 +98,10 @@ var int lenMaPrice          = input.int(defval=55, title='Length', inline='1', m
 // LS Volatility Index
 var int lenHistVol          = input.int(defval=89, title='Length for Historical Volatility', inline='4', minval=1, group=GROUP_LS)
 var int lenNormal           = input.int(defval=89, title='Normalization Length', inline='5', minval=1, tooltip=TOOLTIP_2, group=GROUP_LS)
-var color colorBottom       = input.color(defval=color.new(#3af13c, 0), title='Bottom', inline='6', tooltip=TOOLTIP_3, group=GROUP_LS)
-var int lowerEndLs            = input.int(defval=0, title='', inline='6', group=GROUP_LS, tooltip=TOOLTIP_6)
-var color colorTop          = input.color(defval=color.new(#ff0000, 0), title='Top', inline='6', tooltip=TOOLTIP_3, group=GROUP_LS)
-var int upperEndLs            = input.int(defval=100, title='', inline='6', group=GROUP_LS, tooltip=TOOLTIP_6)
+var color colorBottom       = input.color(defval=color.new(#3af13c, 0), title='Bottom', inline='6', group=GROUP_LS)
+var int lowerEndLs          = input.int(defval=0, title='', inline='6', group=GROUP_LS, tooltip=TOOLTIP_6)
+var color colorTop          = input.color(defval=color.new(#ff0000, 0), title='Top', inline='6', group=GROUP_LS)
+var int upperEndLs          = input.int(defval=100, title='', inline='6', group=GROUP_LS, tooltip=TOOLTIP_6)
 
 // Smooth LS
 var bool boolSmoothLS       = input.bool(defval=false, title='Smooth indicator?', inline='10', group=GROUP_LS)
@@ -121,6 +121,7 @@ var color colorAboveMaLS    = input.color(defval=color.new(#ff0000, 0), title='M
 var color colorBellowMaLS   = input.color(defval=color.new(#3af13c, 0), title='MA above indicator', inline='22', group=GROUP_LS)
 var bool ribbonMaLs         = input.bool(defval=false, title='Apply ribbon filling between indicator and MA?', inline='23', group=GROUP_LS)
 
+// Theme
 var string themeLS          = input.string(defval='Default', title='Theme for LS', 
   options=['Default', 'Spectrum Blue-Green-Red', 'Spectrum Blue-Red'], inline='25', group=GROUP_LS, tooltip=TOOLTIP_8)
 
@@ -160,11 +161,13 @@ var color colorCrossUnderBg = input.color(defval=color.new(#3af13c, 75), title='
 //---------------------
 var bool showATRvol         = input.bool(defval=true, title='Show ATR?', inline='60', group=GROUP_ATR, tooltip=TOOLTIP_4)
 var int lenATR              = input.int(defval=1, minval=1, title='Length', inline='60', group=GROUP_ATR, tooltip=TOOLTIP_4)
+
 var bool calcHistVol        = input.bool(defval=true, title='Consider Historical Volatility?', inline='61', group=GROUP_ATR, tooltip=TOOLTIP_7)
-var color colorATRbottom    = input.color(defval=color.new(#0EEAFF, 50), title='Bottom', inline='62', tooltip=TOOLTIP_3, group=GROUP_ATR)
+
+var color colorATRbottom    = input.color(defval=color.new(#0EEAFF, 50), title='Bottom', inline='62', group=GROUP_ATR)
 var int bottomATR           = input.int(defval=0, title='', inline='62', group=GROUP_ATR)
-var color colorATRtop       = input.color(defval=color.new(#1101ff, 0), title='Top', inline='62', tooltip=TOOLTIP_3, group=GROUP_ATR)
-var int topATR              = input.int(defval=100, title='', inline='62', group=GROUP_ATR)
+var color colorATRtop       = input.color(defval=color.new(#1101ff, 0), title='Top', inline='62', group=GROUP_ATR)
+var int topATR              = input.int(defval=100, title='', inline='62', group=GROUP_ATR, tooltip=TOOLTIP_6)
 
 // Smooth
 var bool boolSmoothATR      = input.bool(defval=true, title='Smooth ATR?', inline='65', group=GROUP_ATR)
@@ -172,7 +175,8 @@ var string typeMaSmoothATR  = input.string(defval=EMA, title='Type',
   options=[SMA, EMA, HMA, ALMA], inline='65', group=GROUP_ATR)
 var int lenSmoothATR        = input.int(defval=5, title='Length', inline='65', minval=1, group=GROUP_ATR)
 
-var string themeATR         = input.string(defval='Default', title='Theme for ATR', 
+// Theme
+var string themeATR         = input.string(defval='Spectrum Blue-Red', title='Theme for ATR', 
   options=['Default', 'Spectrum Blue-Green-Red', 'Spectrum Blue-Red'], inline='66', group=GROUP_ATR, tooltip=TOOLTIP_8)
 
 // --> Alerts
