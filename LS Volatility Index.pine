@@ -26,6 +26,7 @@ var string TOOLTIP_3    = 'Indicator color when at the bottom or top.'
 var string TOOLTIP_4    = 'This will show the ATR (Average True Range)'
 var string TOOLTIP_6    = 'Values used in normalization range'
 var string TOOLTIP_7    = 'Calculates the index dividing by historical volatility, that is, obtaining the ratio between candle variation and historical volatility.'
+var string TOOLTIP_8    = 'Individual colors do not apply when the theme is not the default'
 var string SMA          = 'Simple Moving Average'
 var string EMA          = 'Exponential Moving Average'
 var string HMA          = 'Hull Moving Average'
@@ -33,6 +34,53 @@ var string ALMA         = 'Arnaud Legoux Moving Average'
 var string MEDIAN       = 'Median'
 var string VWAP         = 'VWAP'
 var color TRANSPARENT   = color.new(color.white, 100)
+
+var arrayColorBGR = array.new_color(na)
+var arrayColorBR = array.new_color(na)
+if barstate.isfirst
+    array.push ( arrayColorBGR, #0000FF )
+    array.push ( arrayColorBGR, #000AFF ), array.push ( arrayColorBGR, #0014FF ), array.push ( arrayColorBGR, #001FFF ), array.push ( arrayColorBGR, #0029FF ), array.push ( arrayColorBGR, #0033FF ),
+    array.push ( arrayColorBGR, #003DFF ), array.push ( arrayColorBGR, #0047FF ), array.push ( arrayColorBGR, #0052FF ), array.push ( arrayColorBGR, #005CFF ), array.push ( arrayColorBGR, #0066FF ),
+    array.push ( arrayColorBGR, #0070FF ), array.push ( arrayColorBGR, #007AFF ), array.push ( arrayColorBGR, #0085FF ), array.push ( arrayColorBGR, #008FFF ), array.push ( arrayColorBGR, #0099FF ),
+    array.push ( arrayColorBGR, #00A3FF ), array.push ( arrayColorBGR, #00ADFF ), array.push ( arrayColorBGR, #00B8FF ), array.push ( arrayColorBGR, #00C2FF ), array.push ( arrayColorBGR, #00CCFF ),
+    array.push ( arrayColorBGR, #00D6FF ), array.push ( arrayColorBGR, #00E0FF ), array.push ( arrayColorBGR, #00EBFF ), array.push ( arrayColorBGR, #00F5FF ), array.push ( arrayColorBGR, #00FFFF ),
+    array.push ( arrayColorBGR, #00FFF5 ), array.push ( arrayColorBGR, #00FFEB ), array.push ( arrayColorBGR, #00FFE0 ), array.push ( arrayColorBGR, #00FFD6 ), array.push ( arrayColorBGR, #00FFCC ),
+    array.push ( arrayColorBGR, #00FFC2 ), array.push ( arrayColorBGR, #00FFB8 ), array.push ( arrayColorBGR, #00FFAD ), array.push ( arrayColorBGR, #00FFA3 ), array.push ( arrayColorBGR, #00FF99 ),
+    array.push ( arrayColorBGR, #00FF8F ), array.push ( arrayColorBGR, #00FF85 ), array.push ( arrayColorBGR, #00FF7A ), array.push ( arrayColorBGR, #00FF70 ), array.push ( arrayColorBGR, #00FF66 ),
+    array.push ( arrayColorBGR, #00FF5C ), array.push ( arrayColorBGR, #00FF52 ), array.push ( arrayColorBGR, #00FF47 ), array.push ( arrayColorBGR, #00FF3D ), array.push ( arrayColorBGR, #00FF33 ),
+    array.push ( arrayColorBGR, #00FF29 ), array.push ( arrayColorBGR, #00FF1F ), array.push ( arrayColorBGR, #00FF14 ), array.push ( arrayColorBGR, #00FF0A ), array.push ( arrayColorBGR, #00FF00 ),
+    array.push ( arrayColorBGR, #0AFF00 ), array.push ( arrayColorBGR, #14FF00 ), array.push ( arrayColorBGR, #1FFF00 ), array.push ( arrayColorBGR, #29FF00 ), array.push ( arrayColorBGR, #33FF00 ),
+    array.push ( arrayColorBGR, #3DFF00 ), array.push ( arrayColorBGR, #47FF00 ), array.push ( arrayColorBGR, #52FF00 ), array.push ( arrayColorBGR, #5CFF00 ), array.push ( arrayColorBGR, #66FF00 ),
+    array.push ( arrayColorBGR, #70FF00 ), array.push ( arrayColorBGR, #7AFF00 ), array.push ( arrayColorBGR, #85FF00 ), array.push ( arrayColorBGR, #8FFF00 ), array.push ( arrayColorBGR, #99FF00 ),
+    array.push ( arrayColorBGR, #A3FF00 ), array.push ( arrayColorBGR, #ADFF00 ), array.push ( arrayColorBGR, #B8FF00 ), array.push ( arrayColorBGR, #C2FF00 ), array.push ( arrayColorBGR, #CCFF00 ),
+    array.push ( arrayColorBGR, #D6FF00 ), array.push ( arrayColorBGR, #E0FF00 ), array.push ( arrayColorBGR, #EBFF00 ), array.push ( arrayColorBGR, #F5FF00 ), array.push ( arrayColorBGR, #FFFF00 ),
+    array.push ( arrayColorBGR, #FFF500 ), array.push ( arrayColorBGR, #FFEB00 ), array.push ( arrayColorBGR, #FFE000 ), array.push ( arrayColorBGR, #FFD600 ), array.push ( arrayColorBGR, #FFCC00 ),
+    array.push ( arrayColorBGR, #FFC200 ), array.push ( arrayColorBGR, #FFB800 ), array.push ( arrayColorBGR, #FFAD00 ), array.push ( arrayColorBGR, #FFA300 ), array.push ( arrayColorBGR, #FF9900 ),
+    array.push ( arrayColorBGR, #FF8F00 ), array.push ( arrayColorBGR, #FF8500 ), array.push ( arrayColorBGR, #FF7A00 ), array.push ( arrayColorBGR, #FF7000 ), array.push ( arrayColorBGR, #FF6600 ),
+    array.push ( arrayColorBGR, #FF5C00 ), array.push ( arrayColorBGR, #FF5200 ), array.push ( arrayColorBGR, #FF4700 ), array.push ( arrayColorBGR, #FF3D00 ), array.push ( arrayColorBGR, #FF3300 ),
+    array.push ( arrayColorBGR, #FF2900 ), array.push ( arrayColorBGR, #FF1F00 ), array.push ( arrayColorBGR, #FF1400 ), array.push ( arrayColorBGR, #FF0000 ), array.push ( arrayColorBGR, #FF0000 )
+    
+    array.push ( arrayColorBR, #0000FF )
+    array.push ( arrayColorBR, #0200FC ), array.push ( arrayColorBR, #0500F9 ), array.push ( arrayColorBR, #0700F7 ), array.push ( arrayColorBR, #0A00F4 ), array.push ( arrayColorBR, #0C00F2 ),
+    array.push ( arrayColorBR, #0F00EF ), array.push ( arrayColorBR, #1100ED ), array.push ( arrayColorBR, #1400EA ), array.push ( arrayColorBR, #1600E8 ), array.push ( arrayColorBR, #1900E5 ),
+    array.push ( arrayColorBR, #1C00E2 ), array.push ( arrayColorBR, #1E00E0 ), array.push ( arrayColorBR, #2100DD ), array.push ( arrayColorBR, #2300DB ), array.push ( arrayColorBR, #2600D8 ),
+    array.push ( arrayColorBR, #2800D6 ), array.push ( arrayColorBR, #2B00D3 ), array.push ( arrayColorBR, #2D00D1 ), array.push ( arrayColorBR, #3000CE ), array.push ( arrayColorBR, #3300CC ),
+    array.push ( arrayColorBR, #3500C9 ), array.push ( arrayColorBR, #3800C6 ), array.push ( arrayColorBR, #3A00C4 ), array.push ( arrayColorBR, #3D00C1 ), array.push ( arrayColorBR, #3F00BF ),
+    array.push ( arrayColorBR, #4200BC ), array.push ( arrayColorBR, #4400BA ), array.push ( arrayColorBR, #4700B7 ), array.push ( arrayColorBR, #4900B5 ), array.push ( arrayColorBR, #4C00B2 ),
+    array.push ( arrayColorBR, #4F00AF ), array.push ( arrayColorBR, #5100AD ), array.push ( arrayColorBR, #5400AA ), array.push ( arrayColorBR, #5600A8 ), array.push ( arrayColorBR, #5900A5 ),
+    array.push ( arrayColorBR, #5B00A3 ), array.push ( arrayColorBR, #5E00A0 ), array.push ( arrayColorBR, #60009E ), array.push ( arrayColorBR, #63009B ), array.push ( arrayColorBR, #660099 ),
+    array.push ( arrayColorBR, #680096 ), array.push ( arrayColorBR, #6B0093 ), array.push ( arrayColorBR, #6D0091 ), array.push ( arrayColorBR, #70008E ), array.push ( arrayColorBR, #72008C ),
+    array.push ( arrayColorBR, #750089 ), array.push ( arrayColorBR, #770087 ), array.push ( arrayColorBR, #7A0084 ), array.push ( arrayColorBR, #7C0082 ), array.push ( arrayColorBR, #7F007F ),
+    array.push ( arrayColorBR, #82007C ), array.push ( arrayColorBR, #84007A ), array.push ( arrayColorBR, #870077 ), array.push ( arrayColorBR, #890075 ), array.push ( arrayColorBR, #8C0072 ),
+    array.push ( arrayColorBR, #8E0070 ), array.push ( arrayColorBR, #91006D ), array.push ( arrayColorBR, #93006B ), array.push ( arrayColorBR, #960068 ), array.push ( arrayColorBR, #990066 ),
+    array.push ( arrayColorBR, #9B0063 ), array.push ( arrayColorBR, #9E0060 ), array.push ( arrayColorBR, #A0005E ), array.push ( arrayColorBR, #A3005B ), array.push ( arrayColorBR, #A50059 ),
+    array.push ( arrayColorBR, #A80056 ), array.push ( arrayColorBR, #AA0054 ), array.push ( arrayColorBR, #AD0051 ), array.push ( arrayColorBR, #AF004F ), array.push ( arrayColorBR, #B2004C ),
+    array.push ( arrayColorBR, #B50049 ), array.push ( arrayColorBR, #B70047 ), array.push ( arrayColorBR, #BA0044 ), array.push ( arrayColorBR, #BC0042 ), array.push ( arrayColorBR, #BF003F ),
+    array.push ( arrayColorBR, #C1003D ), array.push ( arrayColorBR, #C4003A ), array.push ( arrayColorBR, #C60038 ), array.push ( arrayColorBR, #C90035 ), array.push ( arrayColorBR, #CC0033 ),
+    array.push ( arrayColorBR, #CE0030 ), array.push ( arrayColorBR, #D1002D ), array.push ( arrayColorBR, #D3002B ), array.push ( arrayColorBR, #D60028 ), array.push ( arrayColorBR, #D80026 ),
+    array.push ( arrayColorBR, #DB0023 ), array.push ( arrayColorBR, #DD0021 ), array.push ( arrayColorBR, #E0001E ), array.push ( arrayColorBR, #E2001C ), array.push ( arrayColorBR, #E50019 ),
+    array.push ( arrayColorBR, #E80016 ), array.push ( arrayColorBR, #EA0014 ), array.push ( arrayColorBR, #ED0011 ), array.push ( arrayColorBR, #EF000F ), array.push ( arrayColorBR, #F2000C ),
+    array.push ( arrayColorBR, #F4000A ), array.push ( arrayColorBR, #F70007 ), array.push ( arrayColorBR, #F90005 ), array.push ( arrayColorBR, #FC0002 ), array.push ( arrayColorBR, #FF0000 )    
 // ------------------------- }
 
 // ------------------------- Inputs {
@@ -73,6 +121,9 @@ var color colorAboveMaLS    = input.color(defval=color.new(#ff0000, 0), title='M
 var color colorBellowMaLS   = input.color(defval=color.new(#3af13c, 0), title='MA above indicator', inline='22', group=GROUP_LS)
 var bool ribbonMaLs         = input.bool(defval=false, title='Apply ribbon filling between indicator and MA?', inline='23', group=GROUP_LS)
 
+var string themeLS          = input.string(defval='Default', title='Theme for LS', 
+  options=['Default', 'Spectrum Blue-Green-Red', 'Spectrum Blue-Red'], inline='25', group=GROUP_LS, tooltip=TOOLTIP_8)
+
 //--> Alerts
 // Markers
 var bool showMarkers        = input.bool(defval=true, title='Show markers when indicator reaches limit?', inline='30', group=GROUP_LS_AL)
@@ -95,6 +146,11 @@ var int bottomBarLS         = input.int(defval=0, title='', inline='51', group=G
 var color colorFarBar       = input.color(defval=color.new(#1101ff, 0), title='Top', inline='51', group=GROUP_LS_AL)
 var int topBarLS            = input.int(defval=100, title='', inline='51', group=GROUP_LS_AL)
 
+// Cross
+var bool crossLS            = input.bool(defval=false, title='Show marker when indicator crosses moving average?', inline='52', group=GROUP_LS_AL)
+var color colorCrossOver    = input.color(defval=color.new(#ff0000, 0), title='Cross Over', inline='53', group=GROUP_LS_AL)
+var color colorCrossUnder   = input.color(defval=color.new(#3af13c, 0), title='Cross Under', inline='53', group=GROUP_LS_AL)
+
 //---------------------
 // ATR
 //---------------------
@@ -112,27 +168,30 @@ var string typeMaSmoothATR  = input.string(defval=EMA, title='Type',
   options=[SMA, EMA, HMA, ALMA], inline='65', group=GROUP_ATR)
 var int lenSmoothATR        = input.int(defval=5, title='Length', inline='65', minval=1, group=GROUP_ATR)
 
+var string themeATR         = input.string(defval='Default', title='Theme for ATR', 
+  options=['Default', 'Spectrum Blue-Green-Red', 'Spectrum Blue-Red'], inline='66', group=GROUP_ATR, tooltip=TOOLTIP_8)
+
 // --> Alerts
 // Markers
-var bool showMarkersATR     = input.bool(defval=true, title='Show markers when indicator reaches limit?', inline='66', group=GROUP_ATR_AL)
-var color colorMarkerATRbot = input.color(defval=color.new(#3af13c, 0), title='Bottom', inline='67', group=GROUP_ATR_AL)
-var int bottomMarkerATR     = input.int(defval=0, title='', inline='67', group=GROUP_ATR_AL)
-var color colorMarkerATRtop = input.color(defval=color.new(#ff0000, 0), title='Top', inline='67', group=GROUP_ATR_AL)
-var int topMarkerATR        = input.int(defval=100, title='', inline='67', group=GROUP_ATR_AL)
+var bool showMarkersATR     = input.bool(defval=true, title='Show markers when indicator reaches limit?', inline='70', group=GROUP_ATR_AL)
+var color colorMarkerATRbot = input.color(defval=color.new(#3af13c, 0), title='Bottom', inline='71', group=GROUP_ATR_AL)
+var int bottomMarkerATR     = input.int(defval=0, title='', inline='71', group=GROUP_ATR_AL)
+var color colorMarkerATRtop = input.color(defval=color.new(#ff0000, 0), title='Top', inline='71', group=GROUP_ATR_AL)
+var int topMarkerATR        = input.int(defval=100, title='', inline='71', group=GROUP_ATR_AL)
 
 // Fill Background
-var bool showFillATR        = input.bool(defval=true, title='Fill background when indicator reaches limit?', inline='70', group=GROUP_ATR_AL)
-var color colorNearBgATR    = input.color(defval=color.new(#3af13c, 75), title='Bottom', inline='71', group=GROUP_ATR_AL)
-var int bottomFillATR       = input.int(defval=0, title='', inline='71', group=GROUP_ATR_AL)
-var color colorFarBgATR     = input.color(defval=color.new(#ff0000, 75), title='Top', inline='71', group=GROUP_ATR_AL)
-var int topFillATR          = input.int(defval=100, title='', inline='71', group=GROUP_ATR_AL)
+var bool showFillATR        = input.bool(defval=true, title='Fill background when indicator reaches limit?', inline='80', group=GROUP_ATR_AL)
+var color colorNearBgATR    = input.color(defval=color.new(#3af13c, 75), title='Bottom', inline='81', group=GROUP_ATR_AL)
+var int bottomFillATR       = input.int(defval=0, title='', inline='81', group=GROUP_ATR_AL)
+var color colorFarBgATR     = input.color(defval=color.new(#ff0000, 75), title='Top', inline='81', group=GROUP_ATR_AL)
+var int topFillATR          = input.int(defval=100, title='', inline='81', group=GROUP_ATR_AL)
 
 // Bar Color
-var bool showBarColorATR    = input.bool(defval=true, title='Change bar color when indicator reaches limit?', inline='80', group=GROUP_ATR_AL)
-var color colorNearBarATR   = input.color(defval=color.new(#1101ff, 0), title='Bottom', inline='81', group=GROUP_ATR_AL)
-var int bottomBarATR        = input.int(defval=0, title='', inline='81', group=GROUP_ATR_AL)
-var color colorFarBarATR    = input.color(defval=color.new(#1101ff, 0), title='Top', inline='81', group=GROUP_ATR_AL)
-var int topBarATR           = input.int(defval=100, title='', inline='81', group=GROUP_ATR_AL)
+var bool showBarColorATR    = input.bool(defval=true, title='Change bar color when indicator reaches limit?', inline='90', group=GROUP_ATR_AL)
+var color colorNearBarATR   = input.color(defval=color.new(#1101ff, 0), title='Bottom', inline='91', group=GROUP_ATR_AL)
+var int bottomBarATR        = input.int(defval=0, title='', inline='91', group=GROUP_ATR_AL)
+var color colorFarBarATR    = input.color(defval=color.new(#1101ff, 0), title='Top', inline='91', group=GROUP_ATR_AL)
+var int topBarATR           = input.int(defval=100, title='', inline='91', group=GROUP_ATR_AL)
 
 // ------------------------- }
 
@@ -198,8 +257,19 @@ if boolSmoothATR
     atrVolatilityIndexNormal := fCalcMa(atrVolatilityIndexNormal, typeMaSmoothATR, lenSmoothATR)
 // ------------------------- }
 
+// ------------------------- Colors {
+fSetColorBGR(percent) =>
+    array.get ( arrayColorBGR, math.round ( percent ) )
+
+fSetColorBR(percent) =>
+    array.get ( arrayColorBR, math.round ( percent ) )    
+// ------------------------- }
+
 // ------------------------- Plots - LS Volatility Index {
-colorLS  = color.from_gradient(lsNormalized > lsNormalized[1] ? lsNormalized : lsNormalized[1], lowerEndLs, upperEndLs, colorBottom, colorTop)
+colorLS = switch themeLS
+    'Default' => color.from_gradient(lsNormalized > lsNormalized[1] ? lsNormalized : lsNormalized[1], lowerEndLs, upperEndLs, colorBottom, colorTop)
+    'Spectrum Blue-Green-Red' => fSetColorBGR(lsNormalized)
+    'Spectrum Blue-Red' => fSetColorBR(lsNormalized)
 
 colorMaLS := if alterColorMaLs
     if lsNormalized > maLS
@@ -244,10 +314,23 @@ barcolor(barstate.isconfirmed and showBarColor and lsNormalized <= bottomBarLS ?
 barcolor(barstate.isconfirmed and showBarColor and lsNormalized >= topBarLS ? colorFarBar : na, title='Bar color when indicator reachs top')
 
 fill(lsPlot, maLsPlot, color=showMaLS and ribbonMaLs ? colorLS : na, title='Ribbon filling between indicator and MA')
+
+
+// Crossover
+plotshape(crossLS and ta.crossover(lsNormalized, maLS) ? maLS : na, title="Crossover", location=location.absolute, style=shape.xcross, size=size.tiny, color=colorCrossOver)
+plotshape(crossLS and ta.crossunder(lsNormalized, maLS) ? maLS : na, title="Crossunder", location=location.absolute, style=shape.xcross, size=size.tiny, color=colorCrossUnder)
+
 // ------------------------- }
 
 // ------------------------- Plots - ATR {
-colorAtr  = showATRvol ? color.from_gradient(atrVolatilityIndexNormal > atrVolatilityIndexNormal[1] ? atrVolatilityIndexNormal : atrVolatilityIndexNormal[1], bottomATR, topATR, colorATRbottom, colorATRtop) : na
+colorAtr = if showATRvol
+    switch themeATR
+        'Default' => color.from_gradient(atrVolatilityIndexNormal > atrVolatilityIndexNormal[1] ? atrVolatilityIndexNormal : atrVolatilityIndexNormal[1], bottomATR, topATR, colorATRbottom, colorATRtop)
+        'Spectrum Blue-Green-Red' => fSetColorBGR(atrVolatilityIndexNormal)
+        'Spectrum Blue-Red' => fSetColorBR(atrVolatilityIndexNormal)    
+else
+    na
+
 plot(atrVolatilityIndexNormal, color=colorAtr, linewidth=1, title='ATR', style=plot.style_histogram)
 
 barcolor(showATRvol and barstate.isconfirmed and showBarColorATR and atrVolatilityIndexNormal <= bottomBarATR ? colorNearBarATR : na, title='Bar color when ATR reachs bottom')
