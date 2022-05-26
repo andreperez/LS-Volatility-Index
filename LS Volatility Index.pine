@@ -133,7 +133,7 @@ var color colorMarkerTop    = input.color(defval=color.new(#ff0000, 0), title='T
 var int topMarkerLS         = input.int(defval=100, title='', inline='31', group=GROUP_LS_AL)
 
 // Fill Background
-var bool showFill           = input.bool(defval=true, title='Fill background when indicator reaches limit?', inline='40', group=GROUP_LS_AL)
+var bool showFill           = input.bool(defval=false, title='Fill background when indicator reaches limit?', inline='40', group=GROUP_LS_AL)
 var color colorNearBg       = input.color(defval=color.new(#3af13c, 75), title='Bottom', inline='41', group=GROUP_LS_AL)
 var int bottomFillLS        = input.int(defval=0, title='', inline='41', group=GROUP_LS_AL)
 var color colorFarBg        = input.color(defval=color.new(#ff0000, 75), title='Top', inline='41', group=GROUP_LS_AL)
@@ -151,11 +151,15 @@ var bool crossLS            = input.bool(defval=false, title='Show marker when i
 var color colorCrossOver    = input.color(defval=color.new(#ff0000, 0), title='Cross Over', inline='53', group=GROUP_LS_AL)
 var color colorCrossUnder   = input.color(defval=color.new(#3af13c, 0), title='Cross Under', inline='53', group=GROUP_LS_AL)
 
+var bool showFillCross      = input.bool(defval=false, title='Fill background when indicator crosses MA?', inline='54', group=GROUP_LS_AL)
+var color colorCrossOverBg  = input.color(defval=color.new(#ff0000, 75), title='Cross Over', inline='55', group=GROUP_LS_AL)
+var color colorCrossUnderBg = input.color(defval=color.new(#3af13c, 75), title='Cross Under', inline='55', group=GROUP_LS_AL)
+
 //---------------------
 // ATR
 //---------------------
 var bool showATRvol         = input.bool(defval=true, title='Show ATR?', inline='60', group=GROUP_ATR, tooltip=TOOLTIP_4)
-var int lenATR              = input.int(defval=5, minval=1, title='Length', inline='60', group=GROUP_ATR, tooltip=TOOLTIP_4)
+var int lenATR              = input.int(defval=1, minval=1, title='Length', inline='60', group=GROUP_ATR, tooltip=TOOLTIP_4)
 var bool calcHistVol        = input.bool(defval=true, title='Consider Historical Volatility?', inline='61', group=GROUP_ATR, tooltip=TOOLTIP_7)
 var color colorATRbottom    = input.color(defval=color.new(#0EEAFF, 50), title='Bottom', inline='62', tooltip=TOOLTIP_3, group=GROUP_ATR)
 var int bottomATR           = input.int(defval=0, title='', inline='62', group=GROUP_ATR)
@@ -163,7 +167,7 @@ var color colorATRtop       = input.color(defval=color.new(#1101ff, 0), title='T
 var int topATR              = input.int(defval=100, title='', inline='62', group=GROUP_ATR)
 
 // Smooth
-var bool boolSmoothATR      = input.bool(defval=false, title='Smooth ATR?', inline='65', group=GROUP_ATR)
+var bool boolSmoothATR      = input.bool(defval=true, title='Smooth ATR?', inline='65', group=GROUP_ATR)
 var string typeMaSmoothATR  = input.string(defval=EMA, title='Type', 
   options=[SMA, EMA, HMA, ALMA], inline='65', group=GROUP_ATR)
 var int lenSmoothATR        = input.int(defval=5, title='Length', inline='65', minval=1, group=GROUP_ATR)
@@ -175,23 +179,23 @@ var string themeATR         = input.string(defval='Default', title='Theme for AT
 // Markers
 var bool showMarkersATR     = input.bool(defval=true, title='Show markers when indicator reaches limit?', inline='70', group=GROUP_ATR_AL)
 var color colorMarkerATRbot = input.color(defval=color.new(#3af13c, 0), title='Bottom', inline='71', group=GROUP_ATR_AL)
-var int bottomMarkerATR     = input.int(defval=0, title='', inline='71', group=GROUP_ATR_AL)
+var int bottomMarkerATR     = input.int(defval=5, title='', inline='71', group=GROUP_ATR_AL)
 var color colorMarkerATRtop = input.color(defval=color.new(#ff0000, 0), title='Top', inline='71', group=GROUP_ATR_AL)
-var int topMarkerATR        = input.int(defval=100, title='', inline='71', group=GROUP_ATR_AL)
+var int topMarkerATR        = input.int(defval=65, title='', inline='71', group=GROUP_ATR_AL)
 
 // Fill Background
-var bool showFillATR        = input.bool(defval=true, title='Fill background when indicator reaches limit?', inline='80', group=GROUP_ATR_AL)
+var bool showFillATR        = input.bool(defval=false, title='Fill background when indicator reaches limit?', inline='80', group=GROUP_ATR_AL)
 var color colorNearBgATR    = input.color(defval=color.new(#3af13c, 75), title='Bottom', inline='81', group=GROUP_ATR_AL)
-var int bottomFillATR       = input.int(defval=0, title='', inline='81', group=GROUP_ATR_AL)
+var int bottomFillATR       = input.int(defval=5, title='', inline='81', group=GROUP_ATR_AL)
 var color colorFarBgATR     = input.color(defval=color.new(#ff0000, 75), title='Top', inline='81', group=GROUP_ATR_AL)
-var int topFillATR          = input.int(defval=100, title='', inline='81', group=GROUP_ATR_AL)
+var int topFillATR          = input.int(defval=65, title='', inline='81', group=GROUP_ATR_AL)
 
 // Bar Color
 var bool showBarColorATR    = input.bool(defval=true, title='Change bar color when indicator reaches limit?', inline='90', group=GROUP_ATR_AL)
 var color colorNearBarATR   = input.color(defval=color.new(#1101ff, 0), title='Bottom', inline='91', group=GROUP_ATR_AL)
-var int bottomBarATR        = input.int(defval=0, title='', inline='91', group=GROUP_ATR_AL)
+var int bottomBarATR        = input.int(defval=5, title='', inline='91', group=GROUP_ATR_AL)
 var color colorFarBarATR    = input.color(defval=color.new(#1101ff, 0), title='Top', inline='91', group=GROUP_ATR_AL)
-var int topBarATR           = input.int(defval=100, title='', inline='91', group=GROUP_ATR_AL)
+var int topBarATR           = input.int(defval=65, title='', inline='91', group=GROUP_ATR_AL)
 
 // ------------------------- }
 
@@ -315,10 +319,28 @@ barcolor(barstate.isconfirmed and showBarColor and lsNormalized >= topBarLS ? co
 
 fill(lsPlot, maLsPlot, color=showMaLS and ribbonMaLs ? colorLS : na, title='Ribbon filling between indicator and MA')
 
-
 // Crossover
 plotshape(crossLS and ta.crossover(lsNormalized, maLS) ? maLS : na, title="Crossover", location=location.absolute, style=shape.xcross, size=size.tiny, color=colorCrossOver)
 plotshape(crossLS and ta.crossunder(lsNormalized, maLS) ? maLS : na, title="Crossunder", location=location.absolute, style=shape.xcross, size=size.tiny, color=colorCrossUnder)
+
+color _colorCrossOverBg = if showFillCross
+    if ta.crossover(lsNormalized, maLS)
+        colorCrossOverBg
+    else
+        na
+else
+    na
+    
+color _colorCrossUnderBg = if showFillCross
+    if ta.crossunder(lsNormalized, maLS)
+        colorCrossUnderBg
+    else
+        na
+else
+    na
+
+fill(hLine000, hLine100, color=_colorCrossOverBg, title='Fill background when indicator cross over MA')
+fill(hLine000, hLine100, color=_colorCrossUnderBg, title='Fill background when indicator cross under MA')
 
 // ------------------------- }
 
@@ -336,7 +358,7 @@ plot(atrVolatilityIndexNormal, color=colorAtr, linewidth=1, title='ATR', style=p
 barcolor(showATRvol and barstate.isconfirmed and showBarColorATR and atrVolatilityIndexNormal <= bottomBarATR ? colorNearBarATR : na, title='Bar color when ATR reachs bottom')
 barcolor(showATRvol and barstate.isconfirmed and showBarColorATR and atrVolatilityIndexNormal >= topBarATR ? colorFarBarATR : na, title='Bar color when ATR reachs top')
 
-plotchar(showATRvol and showMarkersATR and atrVolatilityIndexNormal <= bottomMarkerATR ? atrVolatilityIndexNormal : na, title='Marker when ATR reachs bottom', color=colorMarkerATRbot, location=location.absolute, char='▪', size=size.tiny)
+plotchar(showATRvol and showMarkersATR and atrVolatilityIndexNormal <= bottomMarkerATR ? bottomATR : na, title='Marker when ATR reachs bottom', color=colorMarkerATRbot, location=location.absolute, char='▪', size=size.tiny)
 plotchar(showATRvol and showMarkersATR and atrVolatilityIndexNormal >= topMarkerATR ? atrVolatilityIndexNormal : na, title='Marker when ATR reachs top', color=colorMarkerATRtop, location=location.absolute, char='▪', size=size.tiny)
 
 colorFillAtrBottom = if showFillATR 
