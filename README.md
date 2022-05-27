@@ -3,6 +3,9 @@ The LS Volatility Index is a technical trading analysis indicator, which can be 
 
 Basically it serves to measure the volatility of the price in relation to a pre-defined moving average.
 
+![alt](images/07.png)
+
+
 ![alt](images/06.png)
 
 ## █  Goals
@@ -92,6 +95,8 @@ not being restricted only to volatility in relation to a moving average.
 The ATR can be hidden if you don't find this information relevant.
 
 Here, the ATR values ​​are normalized in the range from 0 to only 30, in order not to pollute the main indicator, which is the LS Volatility Index.
+
+But these limits can be personalized.
 
 Remembering that the red line at 30 is inherent in LS.
 An LS with a value above 30 indicates a price possibly far from the average, while an LS with a value below 30 indicates a price close to the average.
