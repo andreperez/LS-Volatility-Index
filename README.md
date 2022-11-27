@@ -124,6 +124,8 @@ You should never rely on a single indicator and always use a range of them when 
 
 ## █  DONATIONS
 
-- BTC: 3AK6MxX93czQraP4AFv1wKYDvPnPipgF51
-- LTC: MBabKb6vedx3UsxTwMJCPPjKdLJSr6dczS
-- Dash: XcmdgWfnNQeJEJhkd6pUaaQpmT3AiA98QA
+- BTC: 1PnerhP2C5xeGXxAkhxQX4rYrBUguGe1yh
+- LTC: LMhAfkzJoUHHWfFCcMnnQ4jdV4Vi9WZG3W
+- Stellar: GCPONJ5OX7KSEHBNPB2SKJZJGYSXTRN7ORYQXW443BLEFLS72ZVYISG2
+- Zcash: t1THe8JvsYqt7bmbFWkFpjssJhJLka6VAhk
+- Tron: TSVnEgtoYhRMwiRYfDFC51XfGNSpxse2yz
